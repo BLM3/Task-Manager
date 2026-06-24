@@ -36,10 +36,23 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         email=user.email,
         password=hash_password(user.password)
     )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+    except Exception as e:
+        db.rollback()
+        # Această linie îți va scrie în terminalul negru/VS Code exact de ce crapă
+        print("\n" + "="*50)
+        print(f"❌ EROARE REALĂ LA ÎNREGISTRARE ÎN DB: {str(e)}")
+        print("="*50 + "\n")
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Eroare internă de server: {str(e)}"
+        )
+
 
 @router.post("/login", response_model=Token)
 def login(user: UserCreate, db: Session = Depends(get_db)):
