@@ -32,21 +32,28 @@ A full-stack task management application with JWT authentication, built with Rea
 
 ## Project Structure
 
-```
 task-manager/
+├── screenshots/            # App screenshots
 ├── client/                 # React frontend
 │   └── src/
-│       ├── api/            # Axios instance
-│       ├── context/        # Auth context (JWT)
-│       └── pages/          # Login, Register, Dashboard
+│       ├── api/
+│       │   └── axios.js        # Axios instance with JWT interceptor
+│       ├── context/
+│       │   └── AuthContext.jsx # Global auth state
+│       └── pages/
+│           ├── Login.jsx
+│           ├── Register.jsx
+│           └── Dashboard.jsx
 └── server/                 # FastAPI backend
     └── app/
-        ├── routers/        # auth.py, tasks.py
-        ├── models.py       # SQLAlchemy models
-        ├── schemas.py      # Pydantic schemas
-        ├── auth.py         # JWT helpers
-        └── database.py     # DB connection
-```
+        ├── routers/
+        │   ├── auth.py         # /auth/register, /auth/login
+        │   └── tasks.py        # CRUD /tasks
+        ├── main.py             # App entry point, CORS
+        ├── models.py           # SQLAlchemy models (User, Task)
+        ├── schemas.py          # Pydantic request/response schemas
+        ├── auth.py             # JWT encode/decode, bcrypt
+        └── database.py         # DB engine, session, Base
 
 ---
 
@@ -61,7 +68,7 @@ task-manager/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/task-manager.git
+git clone https://github.com/BLM3/task-manager.git
 cd task-manager
 ```
 
@@ -152,4 +159,4 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ## License
 
-MIT © [Your Name](https://github.com/your-username)
+MIT © [BLM3](https://github.com/BLM3)
