@@ -4,7 +4,7 @@ A full-stack task management application with JWT authentication, built with Rea
 
 ![App Screenshot](screenshots/dashboard.png)
 
-🔗 **Live Demo:** [your-app.vercel.app](https://your-app.vercel.app) &nbsp;|&nbsp; **API Docs:** [your-api.railway.app/docs](https://your-api.railway.app/docs)
+🔗 **Live Demo:** [task-manager-umber-xi.vercel.app](https://task-manager-umber-xi.vercel.app) &nbsp;|&nbsp; **API Docs:** [task-manager-production-e8f1.up.railway.app/docs](https://task-manager-production-e8f1.up.railway.app/docs)
 
 ---
 
@@ -25,7 +25,7 @@ A full-stack task management application with JWT authentication, built with Rea
 | Frontend | React 18, Vite, Tailwind CSS, React Router |
 | Backend | Python, FastAPI, SQLAlchemy |
 | Database | PostgreSQL |
-| Auth | JWT (python-jose), bcrypt (passlib) |
+| Auth | JWT (python-jose),Native Hashing (bcrypt) |
 | Deploy | Vercel, Railway |
 
 ---
@@ -44,6 +44,7 @@ task-manager/
 │           ├── Login.jsx
 │           ├── Register.jsx
 │           └── Dashboard.jsx
+│   └── vercel.json        # Vercel configuration for SPA routing
 └── server/                 # FastAPI backend
     └── app/
         ├── routers/
@@ -107,6 +108,10 @@ API available at `http://127.0.0.1:8000` — Swagger docs at `http://127.0.0.1:8
 
 ```bash
 cd client
+Create a .env file in the client/ folder for local development:
+Fragment de cod
+VITE_API_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+
 npm install
 npm run dev
 ```
@@ -144,8 +149,26 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ## Deployment
 
-- **Frontend** — deployed on [Vercel](https://vercel.com). Connect your GitHub repo and set root directory to `client/`.
-- **Backend + DB** — deployed on [Railway](https://railway.app). Add a Python service (root: `server/`) and a PostgreSQL plugin. Set environment variables in the Railway dashboard.
+### 💻 Frontend (Vercel)
+Aplicația de frontend este găzduită pe [Vercel](https://vercel.com).
+
+1. Conectează contul tău de GitHub la Vercel și importă repository-ul `task-manager`.
+2. În configurarea proiectului, setează **Root Directory** ca fiind `client/`.
+3. Mergi la secțiunea **Environment Variables** și adaugă următoarea cheie:
+   - `VITE_API_URL`: `https://task-manager-production-e8f1.up.railway.app` *(Atenție: fără bară `/` la final)*.
+4. Pentru a suporta rutele dinamice (React Router) fără erori `404 NOT FOUND`, proiectul conține deja fișierul de configurare `vercel.json` în rădăcina folderului de client.
+
+### ⚙️ Backend & Baza de date (Railway)
+Backend-ul și baza de date PostgreSQL rulează pe [Railway](https://railway.app).
+
+1. Creează un nou proiect pe Railway și adaugă un serviciu din GitHub, selectând folderul `server/`.
+2. Adaugă un plugin/serviciu de **PostgreSQL** în același proiect. Railway va genera automat variabila `DATABASE_URL`.
+3. Mergi la tab-ul **Variables** din serviciul tău de backend FastAPI și configurează manual:
+   - `DATABASE_URL`: *(se preia automat din baza de date conectată)*
+   - `JWT_SECRET`: `o-cheie-secreta-si-lunga`
+   - `JWT_ALGORITHM`: `HS256`
+   - `ACCESS_TOKEN_EXPIRE_MINUTES`: `60`
+4. Serverul este optimizat pentru producție: rulează pe Python 3.13, folosește portul dinamic injectat de Railway (`PORT`) și utilizează hashing nativ prin `bcrypt` pentru a evita erorile de compatibilitate din producție
 
 ---
 
@@ -159,4 +182,4 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ## License
 
-MIT © [BLM3](https://github.com/BLM3)
+MIT © [BLM3].
