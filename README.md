@@ -31,7 +31,7 @@ A full-stack task management application with JWT authentication, built with Rea
 ---
 
 ## Project Structure
-
+```
 task-manager/
 ├── screenshots/            # App screenshots
 ├── client/                 # React frontend
@@ -54,7 +54,7 @@ task-manager/
         ├── schemas.py          # Pydantic request/response schemas
         ├── auth.py             # JWT encode/decode, bcrypt
         └── database.py         # DB engine, session, Base
-
+```
 ---
 
 ## Getting Started
