@@ -1,24 +1,29 @@
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from passlib.context import CryptContext
-from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
+from jose import JWTError, jwt
+from dotenv import load_dotenv
 import os
-import logging
-import passlib.handlers.bcrypt
+import bcrypt
+
 load_dotenv()
-logging.getLogger("passlib").semibold = False
+
 SECRET_KEY = os.getenv("JWT_SECRET")
 ALG = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    # Transformă string-ul în bytes, generează salt-ul și criptează
+    password_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    # Returnează rezultatul sub formă de string pentru a-l salva în DB
+    return hashed.decode('utf-8')
 
-def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    # Convertește ambele parole în bytes și le compară securizat
+    return bcrypt.checkpw(
+        plain_password.encode('utf-8'),
+        hashed_password.encode('utf-8')
+    )
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
