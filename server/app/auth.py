@@ -4,10 +4,10 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 import os
-
-
+import logging
+import passlib.handlers.bcrypt
 load_dotenv()
-
+logging.getLogger("passlib").semibold = False
 SECRET_KEY = os.getenv("JWT_SECRET")
 ALG = os.getenv("JWT_ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
